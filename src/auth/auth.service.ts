@@ -55,10 +55,22 @@ export class AuthService {
   }
 
   signToken(user: User): string {
-    const payload = {
-      sub: user.email,
-    };
+    return this.jwtService.sign(
+      { sub: user.id, email: user.email },
+      { secret: process.env.JWT_SECRET, expiresIn: '15m' }, // Short-lived token
+    );
+  }
 
-    return this.jwtService.sign(payload, );
+  signRefreshToken(user: User): string {
+    return this.jwtService.sign(
+      { sub: user.id, email: user.email },
+      { secret: process.env.REFRESH_SECRET, expiresIn: '7d' }, // Long-lived token
+    );
+  }
+
+  verifyRefreshToken(token: string): any {
+    return this.jwtService.verify(token, {
+      secret: process.env.REFRESH_SECRET,
+    });
   }
 }

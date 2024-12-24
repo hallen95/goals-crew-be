@@ -22,10 +22,12 @@ export class TokenInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map(user => {
         const response = context.switchToHttp().getResponse<Response>();
-        const token = this.authService.signToken(user);
 
-        response.setHeader('Authorization', `Bearer ${token}`);
-        response.cookie('token', token, {
+        const accessToken = this.authService.signToken(user);
+        const refreshToken = this.authService.signRefreshToken(user);
+
+        response.setHeader('Authorization', `Bearer ${accessToken}`);
+        response.cookie('refreshToken', refreshToken, {
           httpOnly: true,
           signed: true,
           sameSite: 'strict',

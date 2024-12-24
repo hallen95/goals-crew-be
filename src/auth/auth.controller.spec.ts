@@ -55,7 +55,8 @@ describe('Auth Controller', () => {
     await expect(controller.login(user)).resolves.toBeDefined();
   });
 
-  it('should got me logged', () => {
-    expect(controller.me(user)).toEqual(user);
+  it('should get logged-in user details', () => {
+    const result = controller.me(user);
+    expect(result).toEqual(user);
   });
 });
